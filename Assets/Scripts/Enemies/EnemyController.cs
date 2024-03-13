@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Void.Core.Events;
 using Zenject;
 
@@ -14,6 +15,8 @@ public class EnemyController : MonoBehaviour
     private float attackCooldown;
     private IEventBus eventBus;
     private bool hasSpawned;
+
+    public event Action<EnemyController> OnDestroyed;
     
     public void Initialize(IEventBus eventBus, PlayerController target)
     {
@@ -33,8 +36,10 @@ public class EnemyController : MonoBehaviour
             {
                 AddedScore = data.Score
             });
-            var death = Instantiate(deathParticles, transform.position, Quaternion.identity);
-            death.transform.localScale = Vector3.one / 2f;
+            // TODO not great, not terrible
+            var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
+            death.transform.localScale = Vector3.one / 1.25f;
+            OnDestroyed?.Invoke(this);
             Destroy(gameObject);
         }
     }

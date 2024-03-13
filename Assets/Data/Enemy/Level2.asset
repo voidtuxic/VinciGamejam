@@ -17,4 +17,5 @@ MonoBehaviour:
   attackRange: 4
   attackCooldown: 2
   attackDamage: 5
-  prefab: {fileID: 7300173818844969644, guid: f9b592bde3088c04893e6702376bea96, type: 3}
+  score: 200
+  prefab: {fileID: 7176839030879503705, guid: ab1e4f471fe903e4e9cf34d2dfa79d2b, type: 3}

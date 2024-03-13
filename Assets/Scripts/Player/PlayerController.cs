@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int maxHealth;
     [SerializeField] private ProjectileData[] projectileData;
     [SerializeField] private Animator animator;
+    [SerializeField] private Transform shootPosition;
+    [SerializeField] private GameObject deathParticles;
 
     private int projectileIndex;
     private float cooldown;
@@ -52,7 +54,7 @@ public class PlayerController : MonoBehaviour
 
         if(cooldown <= 0 && Input.GetButton("Fire1"))
         {
-            var instance = Instantiate(projectile.Prefab, transform.position, transform.rotation);
+            var instance = Instantiate(projectile.Prefab, shootPosition.position, transform.rotation);
             instance.Initialize(projectile);
             cooldown = projectile.Cooldown;
         }
@@ -72,8 +74,14 @@ public class PlayerController : MonoBehaviour
         });
         if(health <= 0)
         {
+            // TODO not great, not terrible
+            var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
+            death.transform.localScale = Vector3.one / 1.25f;
             Destroy(gameObject);
-            eventBus.PublishEvent(new PlayerEvent.GameOver());
+            eventBus.PublishEvent(new PlayerEvent.GameOver
+            {
+                Message = "YOU DIED"
+            });
         }
     }
 }
