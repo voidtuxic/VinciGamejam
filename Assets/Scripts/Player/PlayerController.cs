@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Transform shootPosition;
     [SerializeField] private GameObject deathParticles;
+    [SerializeField] private GameObject hitParticles;
 
     private int projectileIndex;
     private float cooldown;
@@ -72,6 +73,8 @@ public class PlayerController : MonoBehaviour
             Health = health,
             MaxHealth = maxHealth
         });
+        animator.SetTrigger("Hit");
+        Instantiate(hitParticles, transform.position, Quaternion.identity);
         if(health <= 0)
         {
             // TODO not great, not terrible
