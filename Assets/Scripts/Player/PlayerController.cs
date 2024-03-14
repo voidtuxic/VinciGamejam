@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform shootPosition;
     [SerializeField] private GameObject deathParticles;
     [SerializeField] private GameObject hitParticles;
+    [SerializeField] private AudioSource hitAudioSource;
+    [SerializeField] private AudioClip hitAudioClip;
 
     private int projectileIndex;
     private float cooldown;
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyDamage(int damage)
     {
         health -= damage;
+        hitAudioSource.PlayOneShot(hitAudioClip);
         eventBus.PublishEvent(new PlayerEvent.UpdateHealth
         {
             Health = health,

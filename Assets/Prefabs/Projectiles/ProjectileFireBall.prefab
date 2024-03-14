@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Intensity
       value: 2.739776
       objectReference: {fileID: 0}
+    - target: {fileID: 7670909088873347952, guid: bab8c03286be8c04b9aeb999d155d099,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: a46f7e917664e3b439629911ee2efd5f, type: 3}
     - target: {fileID: 8210605226354642813, guid: bab8c03286be8c04b9aeb999d155d099,
         type: 3}
       propertyPath: deathParticles
