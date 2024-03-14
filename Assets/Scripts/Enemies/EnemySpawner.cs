@@ -23,9 +23,19 @@ public class EnemySpawner : MonoBehaviour
     private void Construct(IEventBus eventBus)
     {
         this.eventBus = eventBus;
+        eventBus.SubscribeEvent<PlayerEvent.StartGame>(OnStartGameEvent);
+    }
+
+    private void OnDestroy()
+    {
+        eventBus.UnsubscribeEvent<PlayerEvent.StartGame>(OnStartGameEvent);
+    }
+
+    private void OnStartGameEvent(PlayerEvent.StartGame evt)
+    {
         StartCoroutine(StartSpawnWave());
     }
-    
+
     private void Update()
     {
         if(spawned || wave >= waves.Length)
@@ -77,6 +87,7 @@ public class EnemySpawner : MonoBehaviour
         {
             if(wave < waves.Length)
             {
+                player.SetProjectile(waves[wave - 1].UnlockedProjectile);
                 StartCoroutine(StartSpawnWave());
             } else
             {

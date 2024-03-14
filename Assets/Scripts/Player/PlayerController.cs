@@ -87,4 +87,6 @@ public class PlayerController : MonoBehaviour
             });
         }
     }
+
+    public void SetProjectile(int index) => projectileIndex = index;
 }

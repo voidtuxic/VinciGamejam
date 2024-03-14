@@ -7,6 +7,8 @@ public static class PlayerEvent
         public int Health { get; set; }
         public int MaxHealth { get; set; }
     }
+    
+    public class StartGame : IEvent {}
 
     public class GameOver : IEvent
     {
