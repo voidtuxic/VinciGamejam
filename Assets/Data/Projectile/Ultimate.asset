@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86991096e9c94505bf88ba2383e180ba, type: 3}
   m_Name: Ultimate
   m_EditorClassIdentifier: 
-  projectileName: Ultimate
+  sfx: 3
   speed: 5
   cooldown: 1
   timeToLive: 5

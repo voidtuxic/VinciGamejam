@@ -12,11 +12,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private SpawnWave[] waves;
     [SerializeField] private float spawnRadius;
     [SerializeField] private int wavePeaceTime;
-    [SerializeField] private AudioSource startWaveAudioSource;
-    [SerializeField] private AudioSource bgmAudioSource;
-    [SerializeField] private AudioClip battleClip;
-    [SerializeField] private AudioClip peaceClip;
-    [SerializeField] private AudioClip gameOverClip;
 
     private int wave;
     private bool spawned = true;
@@ -43,19 +38,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if(player == null && bgmAudioSource.clip != gameOverClip)
-        {
-            bgmAudioSource.clip = gameOverClip;
-            bgmAudioSource.Play();
-        }
         if(spawned || wave >= waves.Length)
         {
             return;
         }
 
-        bgmAudioSource.clip = battleClip;
-        bgmAudioSource.Play();
-        startWaveAudioSource.Play();
+        eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.Battle));
+        eventBus.PublishEvent(new AudioEvent.PlaySFX(SFXType.WaveStart));
         var waveData = waves[wave];
         SpawnLevel(enemyData[0], waveData.Level1);
         SpawnLevel(enemyData[1], waveData.Level2);
@@ -66,8 +55,7 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator StartSpawnWave()
     {
-        bgmAudioSource.clip = peaceClip;
-        bgmAudioSource.Play();
+        eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.Peace));
         for(int i = 0; i < wavePeaceTime; i++)
         {
             eventBus.PublishEvent(new PlayerEvent.UpdateWave
@@ -97,18 +85,17 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnemyDestroyed(EnemyController instance)
     {
         instance.OnDestroyed -= OnEnemyDestroyed;
+        eventBus.PublishEvent(new AudioEvent.PlaySFX(SFXType.Kill));
         enemies.Remove(instance);
         if(enemies.Count == 0)
         {
-            bgmAudioSource.Stop();
             if(wave < waves.Length)
             {
                 player.SetProjectile(waves[wave - 1].UnlockedProjectile);
                 StartCoroutine(StartSpawnWave());
             } else
             {
-                bgmAudioSource.clip = gameOverClip;
-                bgmAudioSource.Play();
+                eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.GameOver));
                 eventBus.PublishEvent(new PlayerEvent.GameOver
                 {
                     Message = "YOU SURVIVED"
