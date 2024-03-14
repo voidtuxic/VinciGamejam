@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
-using Void.Core.Events;
-using Zenject;
 
 public class EnemyController : MonoBehaviour
 {
+    private static readonly int Moving = Animator.StringToHash("Moving");
+    private static readonly int Attack = Animator.StringToHash("Attack");
+    
     [SerializeField] private Rigidbody body;
     [SerializeField] private Animator animator;
     [SerializeField] private EnemyData data;
@@ -13,15 +14,13 @@ public class EnemyController : MonoBehaviour
     private PlayerController target;
     private int currentLife;
     private float attackCooldown;
-    private IEventBus eventBus;
     private bool hasSpawned;
 
     public event Action<EnemyController> OnDestroyed;
     
-    public void Initialize(IEventBus eventBus, PlayerController target)
+    public void Initialize(PlayerController target)
     {
         this.target = target;
-        this.eventBus = eventBus;
         currentLife = data.Life;
         hasSpawned = false;
     }
@@ -36,7 +35,6 @@ public class EnemyController : MonoBehaviour
             var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
             death.transform.localScale = Vector3.one / 1.25f;
             OnDestroyed?.Invoke(this);
-            Destroy(gameObject);
         }
     }
 
@@ -50,7 +48,7 @@ public class EnemyController : MonoBehaviour
         if(!hasSpawned || target == null)
         {
             body.velocity = Vector3.zero;
-            animator.SetBool("Moving", false);
+            animator.SetBool(Moving, false);
             return;
         }
 
@@ -61,17 +59,17 @@ public class EnemyController : MonoBehaviour
         if(Vector3.Distance(transform.position, target.transform.position) <= data.AttackRange)
         {
             body.velocity = Vector3.zero;
-            animator.SetBool("Moving", false);
+            animator.SetBool(Moving, false);
             if(attackCooldown <= 0)
             {
-                animator.SetTrigger("Attack");
+                animator.SetTrigger(Attack);
                 target.ApplyDamage(data.AttackDamage);
                 attackCooldown = data.AttackCooldown;
             }
         }
         else
         {
-            animator.SetBool("Moving", true);
+            animator.SetBool(Moving, true);
             body.velocity = direction * data.Speed;
         }
         

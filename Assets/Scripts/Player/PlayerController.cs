@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Void.Core.Events;
 using Zenject;
 
 public class PlayerController : MonoBehaviour
 {
+    private static readonly int Moving = Animator.StringToHash("Moving");
+    private static readonly int Hit = Animator.StringToHash("Hit");
+    
     [SerializeField] private Camera viewCamera;
     [SerializeField] private Rigidbody body;
     [SerializeField] private float speed;
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
             Input.GetAxis("Vertical"));
         movementDirection.Normalize();
         
-        animator.SetBool("Moving", movementDirection.sqrMagnitude > 0);
+        animator.SetBool(Moving, movementDirection.sqrMagnitude > 0);
 
         body.velocity = movementDirection * speed;
     }
@@ -75,7 +76,7 @@ public class PlayerController : MonoBehaviour
             Health = health,
             MaxHealth = maxHealth
         });
-        animator.SetTrigger("Hit");
+        animator.SetTrigger(Hit);
         Instantiate(hitParticles, transform.position, Quaternion.identity);
         if(health <= 0)
         {

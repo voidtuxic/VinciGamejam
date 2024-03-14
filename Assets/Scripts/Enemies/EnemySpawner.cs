@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Void.Core.Events;
 using Zenject;
-using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -18,7 +18,21 @@ public class EnemySpawner : MonoBehaviour
     private IEventBus eventBus;
 
     private readonly HashSet<EnemyController> enemies = new HashSet<EnemyController>();
-    
+
+    private readonly List<EnemyController> level1Pool = new List<EnemyController>();
+    private readonly List<EnemyController> level2Pool = new List<EnemyController>();
+    private readonly List<EnemyController> level3Pool = new List<EnemyController>();
+
+    private void Awake()
+    {
+        var maxLvl1 = waves.Max(w => w.Level1);
+        var maxLvl2 = waves.Max(w => w.Level2);
+        var maxLvl3 = waves.Max(w => w.Level3);
+        CreatePool(enemyData[0], maxLvl1, level1Pool);
+        CreatePool(enemyData[1], maxLvl2, level2Pool);
+        CreatePool(enemyData[2], maxLvl3, level3Pool);
+    }
+
     [Inject]
     private void Construct(IEventBus eventBus)
     {
@@ -46,9 +60,9 @@ public class EnemySpawner : MonoBehaviour
         eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.Battle));
         eventBus.PublishEvent(new AudioEvent.PlaySFX(SFXType.WaveStart));
         var waveData = waves[wave];
-        SpawnLevel(enemyData[0], waveData.Level1);
-        SpawnLevel(enemyData[1], waveData.Level2);
-        SpawnLevel(enemyData[2], waveData.Level3);
+        SpawnLevel(enemyData[0], waveData.Level1, level1Pool);
+        SpawnLevel(enemyData[1], waveData.Level2, level2Pool);
+        SpawnLevel(enemyData[2], waveData.Level3, level3Pool);
         wave++;
         spawned = true;
     }
@@ -69,24 +83,42 @@ public class EnemySpawner : MonoBehaviour
         spawned = false;
     }
 
-    private void SpawnLevel(EnemyData data, int count)
+    private void CreatePool(EnemyData data, int count, List<EnemyController> pool)
     {
         for(int i = 0; i < count; i++)
         {
             var instance = Instantiate(data.Prefab, transform);
+            instance.gameObject.SetActive(false);
+            pool.Add(instance);
+        }
+    }
+
+    private void SpawnLevel(EnemyData data, int count, List<EnemyController> pool)
+    {
+        for(int i = 0; i < count; i++)
+        {
+            var instance = pool[i];
             var direction2d = Random.insideUnitCircle * spawnRadius;
             instance.transform.localPosition = new Vector3(direction2d.x, 0, direction2d.y);
-            instance.Initialize(eventBus, player);
+            instance.Initialize(player);
             instance.OnDestroyed += OnEnemyDestroyed;
             enemies.Add(instance);
+            instance.gameObject.SetActive(true);
         }
     }
 
     private void OnEnemyDestroyed(EnemyController instance)
     {
-        instance.OnDestroyed -= OnEnemyDestroyed;
         eventBus.PublishEvent(new AudioEvent.PlaySFX(SFXType.Kill));
+        instance.OnDestroyed -= OnEnemyDestroyed;
+        instance.gameObject.SetActive(false);
         enemies.Remove(instance);
+        
+        HandleGameProgress();
+    }
+
+    private void HandleGameProgress()
+    {
         if(enemies.Count == 0)
         {
             if(wave < waves.Length)
