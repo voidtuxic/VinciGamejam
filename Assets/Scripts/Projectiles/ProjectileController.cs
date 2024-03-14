@@ -1,23 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
     [SerializeField] private Rigidbody body;
     [SerializeField] private GameObject deathParticles;
+    [SerializeField] private ProjectileData data;
     
-    private ProjectileData data;
+    private int projectileIndex;
     private float timeToLive;
 
-    public void Initialize(ProjectileData projectileData)
+    public Action<ProjectileController, int> OnDispose;
+
+    public void Initialize(Vector3 position, Quaternion rotation, int index)
     {
-        data = projectileData;
-    }
-    
-    private void Start()
-    {
-        body.velocity = transform.rotation * Vector3.forward * data.Speed;
+        transform.position = position;
+        transform.rotation = rotation;
+        body.velocity = rotation * Vector3.forward * data.Speed;
+        timeToLive = 0;
+        projectileIndex = index;
+        gameObject.SetActive(true);
     }
 
     private void Update()
@@ -25,7 +27,8 @@ public class ProjectileController : MonoBehaviour
         timeToLive += Time.deltaTime;
         if(timeToLive >= data.TimeToLive)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            OnDispose?.Invoke(this, projectileIndex);
         }
     }
 
@@ -35,8 +38,9 @@ public class ProjectileController : MonoBehaviour
         {
             var enemy = other.gameObject.GetComponent<EnemyController>();
             enemy.ApplyDamage(data.Damage);
-            Instantiate(deathParticles, transform.position, Quaternion.identity);
-            Destroy(gameObject);
         }
+        Instantiate(deathParticles, transform.position, Quaternion.identity);
+        gameObject.SetActive(false);
+        OnDispose?.Invoke(this, projectileIndex);
     }
 }

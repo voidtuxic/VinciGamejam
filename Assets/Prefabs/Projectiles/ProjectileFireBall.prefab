@@ -75,6 +75,12 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: a46f7e917664e3b439629911ee2efd5f, type: 3}
     - target: {fileID: 8210605226354642813, guid: bab8c03286be8c04b9aeb999d155d099,
         type: 3}
+      propertyPath: data
+      value: 
+      objectReference: {fileID: 11400000, guid: 6c6097fed3046284db16f3cb84f3538d,
+        type: 2}
+    - target: {fileID: 8210605226354642813, guid: bab8c03286be8c04b9aeb999d155d099,
+        type: 3}
       propertyPath: deathParticles
       value: 
       objectReference: {fileID: 2504214343621411470, guid: 3ed0d324122d7b24eaec75c55c74aafc,

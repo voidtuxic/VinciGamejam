@@ -165,7 +165,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &8210605226354642813
 MonoBehaviour:
@@ -182,6 +182,7 @@ MonoBehaviour:
   body: {fileID: 6878170689661209702}
   deathParticles: {fileID: 1429954232896169633, guid: 83036083a4ebcd34f98131bd3cf6f4d2,
     type: 3}
+  data: {fileID: 11400000, guid: 756008c860613694c939a0e1c17ce0f0, type: 2}
 --- !u!1001 &7885527950547180695
 PrefabInstance:
   m_ObjectHideFlags: 0

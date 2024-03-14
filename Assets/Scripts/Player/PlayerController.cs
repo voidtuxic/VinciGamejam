@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using Void.Core.Events;
 using Zenject;
@@ -16,17 +17,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform shootPosition;
     [SerializeField] private GameObject deathParticles;
     [SerializeField] private GameObject hitParticles;
+    [SerializeField] private int projectilePoolSize;
+    [SerializeField] private Transform projectileContainer;
 
     private int projectileIndex;
     private float cooldown;
     private int health;
     private IEventBus eventBus;
     private ProjectileData projectile => projectileData[projectileIndex];
+    private readonly List<Queue<ProjectileController>> projectilePool = new List<Queue<ProjectileController>>();
 
     [Inject]
     private void Construct(IEventBus eventBus)
     {
         this.eventBus = eventBus;
+    }
+
+    private void Awake()
+    {
+        foreach(var data in projectileData)
+        {
+            var pool = new Queue<ProjectileController>();
+            for(int i = 0; i < projectilePoolSize; i++)
+            {
+                var instance = Instantiate(data.Prefab, projectileContainer);
+                instance.gameObject.SetActive(false);
+                instance.OnDispose += OnProjectileDispose;
+                pool.Enqueue(instance);
+            }
+            projectilePool.Add(pool);
+        }
     }
 
     private void Start()
@@ -56,10 +76,11 @@ public class PlayerController : MonoBehaviour
 
         if(cooldown <= 0 && Input.GetButton("Fire1"))
         {
-            eventBus.PublishEvent(new AudioEvent.PlaySFX(projectile.SFX));
-            var instance = Instantiate(projectile.Prefab, shootPosition.position, transform.rotation);
-            instance.Initialize(projectile);
             cooldown = projectile.Cooldown;
+            eventBus.PublishEvent(new AudioEvent.PlaySFX(projectile.SFX));
+            
+            var instance = projectilePool[projectileIndex].Dequeue();
+            instance.Initialize(shootPosition.position, transform.rotation, projectileIndex);
         }
         else if(cooldown > 0)
         {
@@ -90,6 +111,11 @@ public class PlayerController : MonoBehaviour
                 Message = "YOU DIED"
             });
         }
+    }
+
+    private void OnProjectileDispose(ProjectileController instance, int index)
+    {
+        projectilePool[index].Enqueue(instance);
     }
 
     public void SetProjectile(int index) => projectileIndex = index;
