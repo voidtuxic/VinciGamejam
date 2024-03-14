@@ -1,4 +1,4 @@
-namespace Void.Core.Events
+namespace Void.Events
 {
     public interface IEventBus
     { 

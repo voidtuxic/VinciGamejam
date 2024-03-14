@@ -1,10 +1,13 @@
 ﻿using System;
 
-[Serializable]
-public class SpawnWave
+namespace Void.Enemies
 {
-    public int Level1;
-    public int Level2;
-    public int Level3;
-    public int UnlockedProjectile;
+    [Serializable]
+    public class SpawnWave
+    {
+        public int Level1;
+        public int Level2;
+        public int Level3;
+        public int UnlockedProjectile;
+    }
 }

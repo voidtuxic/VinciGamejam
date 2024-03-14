@@ -1,10 +1,13 @@
-﻿using Void.Core.Events;
+﻿using Void.Events;
 
-public static class PlayerEvent
+namespace Void.Player
 {
-    public class UpdateHealth : IEvent
+    public static class PlayerEvent
     {
-        public int Health { get; set; }
-        public int MaxHealth { get; set; }
+        public class UpdateHealth : IEvent
+        {
+            public int Health { get; set; }
+            public int MaxHealth { get; set; }
+        }
     }
 }

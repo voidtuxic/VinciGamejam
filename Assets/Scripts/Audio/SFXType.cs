@@ -1,19 +1,22 @@
 ﻿using System;
 using UnityEngine;
 
-public enum SFXType
+namespace Void.Audio
 {
-    WaveStart,
-    Projectile1,
-    Projectile2,
-    Projectile3,
-    Hit,
-    Kill,
-}
+    public enum SFXType
+    {
+        WaveStart,
+        Projectile1,
+        Projectile2,
+        Projectile3,
+        Hit,
+        Kill,
+    }
 
-[Serializable]
-public class SFXData
-{
-    public SFXType Type;
-    public AudioClip Clip;
+    [Serializable]
+    public class SFXData
+    {
+        public SFXType Type;
+        public AudioClip Clip;
+    }
 }

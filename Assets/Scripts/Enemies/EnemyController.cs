@@ -1,81 +1,85 @@
 ﻿using System;
+using Void.Player;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+namespace Void.Enemies
 {
-    private static readonly int Moving = Animator.StringToHash("Moving");
-    private static readonly int Attack = Animator.StringToHash("Attack");
+    public class EnemyController : MonoBehaviour
+    {
+        private static readonly int Moving = Animator.StringToHash("Moving");
+        private static readonly int Attack = Animator.StringToHash("Attack");
     
-    [SerializeField] private Rigidbody body;
-    [SerializeField] private Animator animator;
-    [SerializeField] private EnemyData data;
-    [SerializeField] private GameObject deathParticles;
+        [SerializeField] private Rigidbody body;
+        [SerializeField] private Animator animator;
+        [SerializeField] private EnemyData data;
+        [SerializeField] private GameObject deathParticles;
 
-    private PlayerController target;
-    private int currentLife;
-    private float attackCooldown;
-    private bool hasSpawned;
+        private PlayerController _target;
+        private int _currentLife;
+        private float _attackCooldown;
+        private bool _hasSpawned;
 
-    public event Action<EnemyController> OnDestroyed;
+        public event Action<EnemyController> OnDestroyed;
     
-    public void Initialize(PlayerController target)
-    {
-        this.target = target;
-        currentLife = data.Life;
-        hasSpawned = false;
-    }
-
-    public void ApplyDamage(int damage)
-    {
-        currentLife -= damage;
-
-        if(currentLife <= 0)
+        public void Initialize(PlayerController target)
         {
-            // TODO not great, not terrible
-            var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
-            death.transform.localScale = Vector3.one / 1.25f;
-            OnDestroyed?.Invoke(this);
-        }
-    }
-
-    public void HasSpawned()
-    {
-        hasSpawned = true;
-    }
-
-    private void FixedUpdate()
-    {
-        if(!hasSpawned || target == null)
-        {
-            body.velocity = Vector3.zero;
-            animator.SetBool(Moving, false);
-            return;
+            _target = target;
+            _currentLife = data.Life;
+            _hasSpawned = false;
         }
 
-        var direction = target.transform.position - transform.position;
-        direction.Normalize();
-        transform.LookAt(target.transform);
-        
-        if(Vector3.Distance(transform.position, target.transform.position) <= data.AttackRange)
+        public void ApplyDamage(int damage)
         {
-            body.velocity = Vector3.zero;
-            animator.SetBool(Moving, false);
-            if(attackCooldown <= 0)
+            _currentLife -= damage;
+
+            if(_currentLife <= 0)
             {
-                animator.SetTrigger(Attack);
-                target.ApplyDamage(data.AttackDamage);
-                attackCooldown = data.AttackCooldown;
+                // TODO not great, not terrible
+                var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
+                death.transform.localScale = Vector3.one / 1.25f;
+                OnDestroyed?.Invoke(this);
             }
         }
-        else
+
+        public void HasSpawned()
         {
-            animator.SetBool(Moving, true);
-            body.velocity = direction * data.Speed;
+            _hasSpawned = true;
         }
-        
-        if(attackCooldown > 0)
+
+        private void FixedUpdate()
         {
-            attackCooldown -= Time.deltaTime;
+            if(!_hasSpawned || _target == null)
+            {
+                body.velocity = Vector3.zero;
+                animator.SetBool(Moving, false);
+                return;
+            }
+
+            var direction = _target.transform.position - transform.position;
+            direction.Normalize();
+            transform.LookAt(_target.transform);
+        
+            if(Vector3.Distance(transform.position, _target.transform.position) <= data.AttackRange)
+            {
+                body.velocity = Vector3.zero;
+                animator.SetBool(Moving, false);
+                if(_attackCooldown <= 0)
+                {
+                    animator.SetTrigger(Attack);
+                    _target.ApplyDamage(data.AttackDamage);
+                    _attackCooldown = data.AttackCooldown;
+                }
+            }
+            else
+            {
+                animator.SetBool(Moving, true);
+                body.velocity = direction * data.Speed;
+            }
+        
+            if(_attackCooldown > 0)
+            {
+                _attackCooldown -= Time.deltaTime;
+            }
         }
     }
 }

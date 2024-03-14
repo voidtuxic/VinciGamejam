@@ -1,22 +1,24 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowTarget : MonoBehaviour
+namespace Void.Camera
 {
-    [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offset;
-    [SerializeField] private float smoothTime = 0.3F;
-    
-    private Vector3 velocity = Vector3.zero;
-    
-    private void FixedUpdate()
+    public class FollowTarget : MonoBehaviour
     {
-        if(target == null)
+        [SerializeField] private Transform target;
+        [SerializeField] private Vector3 offset;
+        [SerializeField] private float smoothTime = 0.3F;
+    
+        private Vector3 _velocity = Vector3.zero;
+    
+        private void FixedUpdate()
         {
-            return;
-        }
+            if(target == null)
+            {
+                return;
+            }
 
-        transform.position = Vector3.SmoothDamp(transform.position, target.position + offset, 
-            ref velocity, smoothTime);
+            transform.position = Vector3.SmoothDamp(transform.position, target.position + offset, 
+                ref _velocity, smoothTime);
+        }
     }
 }

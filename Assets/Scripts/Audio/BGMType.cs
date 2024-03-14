@@ -1,17 +1,20 @@
 ﻿using System;
 using UnityEngine;
 
-public enum BGMType
+namespace Void.Audio
 {
-    Menu,
-    Peace,
-    Battle,
-    GameOver
-}
+    public enum BGMType
+    {
+        Menu,
+        Peace,
+        Battle,
+        GameOver
+    }
 
-[Serializable]
-public class BGMData
-{
-    public BGMType Type;
-    public AudioClip Clip;
+    [Serializable]
+    public class BGMData
+    {
+        public BGMType Type;
+        public AudioClip Clip;
+    }
 }

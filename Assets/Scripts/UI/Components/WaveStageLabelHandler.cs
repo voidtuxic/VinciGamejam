@@ -1,29 +1,26 @@
-﻿using TMPro;
+﻿using Void.Player;
+using TMPro;
 using UnityEngine;
-using Void.Core.Events;
-using Zenject;
 
-public class WaveStageLabelHandler : MonoBehaviour
+namespace Void.UI.Components
 {
-    [SerializeField] private TextMeshProUGUI label;
+    public class WaveStageLabelHandler : UIEventComponent
+    {
+        [SerializeField] private TextMeshProUGUI label;
     
-    private IEventBus eventBus;
-    
-    [Inject]
-    private void Construct(IEventBus eventBus)
-    {
-        this.eventBus = eventBus;
-        
-        eventBus.SubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
-    }
+        protected override void Bind()
+        {
+            EventBus.SubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+        }
 
-    private void OnUpdateWaveEvent(GameEvent.UpdateWave evt)
-    {
-        label.text = $"Wave {evt.Wave}";
-    }
+        private void OnUpdateWaveEvent(GameEvent.UpdateWave evt)
+        {
+            label.text = $"Wave {evt.Wave}";
+        }
 
-    private void OnDestroy()
-    {
-        eventBus.UnsubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+        private void OnDestroy()
+        {
+            EventBus.UnsubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+        }
     }
 }

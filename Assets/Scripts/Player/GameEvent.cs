@@ -1,18 +1,21 @@
-﻿using Void.Core.Events;
+﻿using Void.Events;
 
-public static class GameEvent
+namespace Void.Player
 {
-    public class StartGame : IEvent {}
+    public static class GameEvent
+    {
+        public class StartGame : IEvent {}
 
-    public class GameOver : IEvent
-    {
-        public string Message { get; set; }
-    }
+        public class GameOver : IEvent
+        {
+            public string Message { get; set; }
+        }
     
-    public class UpdateWave : IEvent
-    {
-        public int Wave { get; set; }
-        public int TimeLeft { get; set; }
+        public class UpdateWave : IEvent
+        {
+            public int Wave { get; set; }
+            public int TimeLeft { get; set; }
+        }
+        public class HideWave : IEvent { }
     }
-    public class HideWave : IEvent { }
 }

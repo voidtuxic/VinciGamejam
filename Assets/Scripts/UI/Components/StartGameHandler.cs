@@ -1,27 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
+using Void.Player;
 using UnityEngine;
-using Void.Core.Events;
-using Zenject;
 
-public class StartGameHandler : MonoBehaviour
+namespace Void.UI.Components
 {
-    private IEventBus eventBus;
-    
-    [Inject]
-    private void Construct(IEventBus eventBus)
+    public class StartGameHandler : UIEventComponent
     {
-        this.eventBus = eventBus;
-    }
-    
-    public void StartGame()
-    {
-        gameObject.SetActive(false);
-        eventBus.PublishEvent(new GameEvent.StartGame());
-    }
+        public void StartGame()
+        {
+            gameObject.SetActive(false);
+            EventBus.PublishEvent(new GameEvent.StartGame());
+        }
 
-    public void ExitGame()
-    {
-        Application.Quit();
+        public void ExitGame()
+        {
+            Application.Quit();
+        }
     }
 }

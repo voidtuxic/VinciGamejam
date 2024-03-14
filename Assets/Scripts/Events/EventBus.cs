@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Void.Core.Events
+namespace Void.Events
 {
     public class EventBus : IEventBus
     {

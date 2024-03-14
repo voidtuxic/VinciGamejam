@@ -1,38 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
+using Void.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Void.Core.Events;
-using Zenject;
 
-public class GameOverHandler : MonoBehaviour
+namespace Void.UI.Components
 {
-    [SerializeField] private TextMeshProUGUI label;
-    
-    private IEventBus eventBus;
-    
-    [Inject]
-    private void Construct(IEventBus eventBus)
+    public class GameOverHandler : UIEventComponent
     {
-        this.eventBus = eventBus;
-        
-        eventBus.SubscribeEvent<GameEvent.GameOver>(OnGameOverEvent);
-    }
+        [SerializeField] private TextMeshProUGUI label;
 
-    private void OnGameOverEvent(GameEvent.GameOver evt)
-    {
-        label.text = evt.Message;
-        gameObject.SetActive(true);
-    }
+        protected override void Bind()
+        {
+            EventBus.SubscribeEvent<GameEvent.GameOver>(OnGameOverEvent);
+        }
 
-    private void OnDestroy()
-    {
-        eventBus.UnsubscribeEvent<GameEvent.GameOver>(OnGameOverEvent);
-    }
+        private void OnGameOverEvent(GameEvent.GameOver evt)
+        {
+            label.text = evt.Message;
+            gameObject.SetActive(true);
+        }
 
-    public void RestartLevel()
-    {
-        SceneManager.LoadScene(0);
+        private void OnDestroy()
+        {
+            EventBus.UnsubscribeEvent<GameEvent.GameOver>(OnGameOverEvent);
+        }
+
+        public void RestartLevel()
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }

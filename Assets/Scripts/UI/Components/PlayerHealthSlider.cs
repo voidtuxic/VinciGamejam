@@ -1,32 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
+using Void.Player;
 using UnityEngine;
 using UnityEngine.UI;
-using Void.Core.Events;
-using Zenject;
 
-public class PlayerHealthSlider : MonoBehaviour
+namespace Void.UI.Components
 {
-    [SerializeField] private Slider slider;
-
-    private IEventBus eventBus;
+    public class PlayerHealthSlider : UIEventComponent
+    {
+        [SerializeField] private Slider slider;
     
-    [Inject]
-    private void Construct(IEventBus eventBus)
-    {
-        this.eventBus = eventBus;
-        
-        eventBus.SubscribeEvent<PlayerEvent.UpdateHealth>(OnUpdateHealthEvent);
-        slider.value = 1;
-    }
+        protected override void Bind()
+        {
+            EventBus.SubscribeEvent<PlayerEvent.UpdateHealth>(OnUpdateHealthEvent);
+            slider.value = 1;
+        }
 
-    private void OnUpdateHealthEvent(PlayerEvent.UpdateHealth evt)
-    {
-        slider.value = (float) evt.Health / evt.MaxHealth;
-    }
+        private void OnUpdateHealthEvent(PlayerEvent.UpdateHealth evt)
+        {
+            slider.value = (float) evt.Health / evt.MaxHealth;
+        }
 
-    private void OnDestroy()
-    {
-        eventBus.UnsubscribeEvent<PlayerEvent.UpdateHealth>(OnUpdateHealthEvent);
+        private void OnDestroy()
+        {
+            EventBus.UnsubscribeEvent<PlayerEvent.UpdateHealth>(OnUpdateHealthEvent);
+        }
     }
 }

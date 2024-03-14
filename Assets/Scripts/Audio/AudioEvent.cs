@@ -1,23 +1,26 @@
-﻿using Void.Core.Events;
+﻿using Void.Events;
 
-public static class AudioEvent
+namespace Void.Audio
 {
-    public class PlayBGM : IEvent
+    public static class AudioEvent
     {
-        public PlayBGM(BGMType type)
+        public class PlayBGM : IEvent
         {
-            Type = type;
-        }
+            public PlayBGM(BGMType type)
+            {
+                Type = type;
+            }
 
-        public BGMType Type { get; private set; }
-    }
-    public class PlaySFX : IEvent
-    {
-        public PlaySFX(SFXType type)
+            public BGMType Type { get; private set; }
+        }
+        public class PlaySFX : IEvent
         {
-            Type = type;
-        }
+            public PlaySFX(SFXType type)
+            {
+                Type = type;
+            }
 
-        public SFXType Type { get; private set; }
+            public SFXType Type { get; private set; }
+        }
     }
 }

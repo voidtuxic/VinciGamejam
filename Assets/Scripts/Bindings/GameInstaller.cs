@@ -1,11 +1,13 @@
-using UnityEngine;
-using Void.Core.Events;
+using Void.Events;
 using Zenject;
 
-public class GameInstaller : MonoInstaller
+namespace Void.Bindings
 {
-    public override void InstallBindings()
+    public class GameInstaller : MonoInstaller
     {
-        Container.Bind<IEventBus>().To<EventBus>().FromNew().AsSingle().NonLazy();
+        public override void InstallBindings()
+        {
+            Container.Bind<IEventBus>().To<EventBus>().FromNew().AsSingle().NonLazy();
+        }
     }
 }
