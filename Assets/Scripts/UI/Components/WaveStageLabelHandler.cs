@@ -14,16 +14,16 @@ public class WaveStageLabelHandler : MonoBehaviour
     {
         this.eventBus = eventBus;
         
-        eventBus.SubscribeEvent<PlayerEvent.UpdateWave>(OnUpdateWaveEvent);
+        eventBus.SubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
     }
 
-    private void OnUpdateWaveEvent(PlayerEvent.UpdateWave evt)
+    private void OnUpdateWaveEvent(GameEvent.UpdateWave evt)
     {
         label.text = $"Wave {evt.Wave}";
     }
 
     private void OnDestroy()
     {
-        eventBus.UnsubscribeEvent<PlayerEvent.UpdateWave>(OnUpdateWaveEvent);
+        eventBus.UnsubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
     }
 }

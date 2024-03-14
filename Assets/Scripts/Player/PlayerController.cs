@@ -83,7 +83,8 @@ public class PlayerController : MonoBehaviour
             var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
             death.transform.localScale = Vector3.one / 1.25f;
             Destroy(gameObject);
-            eventBus.PublishEvent(new PlayerEvent.GameOver
+            eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.GameOver));
+            eventBus.PublishEvent(new GameEvent.GameOver
             {
                 Message = "YOU DIED"
             });

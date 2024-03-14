@@ -16,16 +16,16 @@ public class WaveLabelHandler : MonoBehaviour
     {
         this.eventBus = eventBus;
         
-        eventBus.SubscribeEvent<PlayerEvent.UpdateWave>(OnUpdateWaveEvent);
-        eventBus.SubscribeEvent<PlayerEvent.HideWave>(OnHideWaveEvent);
+        eventBus.SubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+        eventBus.SubscribeEvent<GameEvent.HideWave>(OnHideWaveEvent);
     }
 
-    private void OnHideWaveEvent(PlayerEvent.HideWave evt)
+    private void OnHideWaveEvent(GameEvent.HideWave evt)
     {
         gameObject.SetActive(false);
     }
 
-    private void OnUpdateWaveEvent(PlayerEvent.UpdateWave evt)
+    private void OnUpdateWaveEvent(GameEvent.UpdateWave evt)
     {
         gameObject.SetActive(true);
         label.text = $"Incoming in {evt.TimeLeft} seconds";
@@ -33,7 +33,7 @@ public class WaveLabelHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        eventBus.UnsubscribeEvent<PlayerEvent.UpdateWave>(OnUpdateWaveEvent);
-        eventBus.UnsubscribeEvent<PlayerEvent.HideWave>(OnHideWaveEvent);
+        eventBus.UnsubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+        eventBus.UnsubscribeEvent<GameEvent.HideWave>(OnHideWaveEvent);
     }
 }

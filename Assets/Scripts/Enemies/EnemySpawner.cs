@@ -23,15 +23,15 @@ public class EnemySpawner : MonoBehaviour
     private void Construct(IEventBus eventBus)
     {
         this.eventBus = eventBus;
-        eventBus.SubscribeEvent<PlayerEvent.StartGame>(OnStartGameEvent);
+        eventBus.SubscribeEvent<GameEvent.StartGame>(OnStartGameEvent);
     }
 
     private void OnDestroy()
     {
-        eventBus.UnsubscribeEvent<PlayerEvent.StartGame>(OnStartGameEvent);
+        eventBus.UnsubscribeEvent<GameEvent.StartGame>(OnStartGameEvent);
     }
 
-    private void OnStartGameEvent(PlayerEvent.StartGame evt)
+    private void OnStartGameEvent(GameEvent.StartGame evt)
     {
         StartCoroutine(StartSpawnWave());
     }
@@ -58,14 +58,14 @@ public class EnemySpawner : MonoBehaviour
         eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.Peace));
         for(int i = 0; i < wavePeaceTime; i++)
         {
-            eventBus.PublishEvent(new PlayerEvent.UpdateWave
+            eventBus.PublishEvent(new GameEvent.UpdateWave
             {
                 Wave = wave + 1,
                 TimeLeft = wavePeaceTime - i
             });
             yield return new WaitForSeconds(1);
         }
-        eventBus.PublishEvent(new PlayerEvent.HideWave());
+        eventBus.PublishEvent(new GameEvent.HideWave());
         spawned = false;
     }
 
@@ -96,7 +96,7 @@ public class EnemySpawner : MonoBehaviour
             } else
             {
                 eventBus.PublishEvent(new AudioEvent.PlayBGM(BGMType.GameOver));
-                eventBus.PublishEvent(new PlayerEvent.GameOver
+                eventBus.PublishEvent(new GameEvent.GameOver
                 {
                     Message = "YOU SURVIVED"
                 });

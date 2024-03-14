@@ -32,10 +32,6 @@ public class EnemyController : MonoBehaviour
 
         if(currentLife <= 0)
         {
-            eventBus.PublishEvent(new PlayerEvent.UpdateScore
-            {
-                AddedScore = data.Score
-            });
             // TODO not great, not terrible
             var death = Instantiate(deathParticles, transform.position, Quaternion.Euler(-90, 0, 0));
             death.transform.localScale = Vector3.one / 1.25f;

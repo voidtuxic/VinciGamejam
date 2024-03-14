@@ -17,7 +17,7 @@ public class StartGameHandler : MonoBehaviour
     public void StartGame()
     {
         gameObject.SetActive(false);
-        eventBus.PublishEvent(new PlayerEvent.StartGame());
+        eventBus.PublishEvent(new GameEvent.StartGame());
     }
 
     public void ExitGame()

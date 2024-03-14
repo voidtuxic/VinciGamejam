@@ -17,10 +17,10 @@ public class GameOverHandler : MonoBehaviour
     {
         this.eventBus = eventBus;
         
-        eventBus.SubscribeEvent<PlayerEvent.GameOver>(OnGameOverEvent);
+        eventBus.SubscribeEvent<GameEvent.GameOver>(OnGameOverEvent);
     }
 
-    private void OnGameOverEvent(PlayerEvent.GameOver evt)
+    private void OnGameOverEvent(GameEvent.GameOver evt)
     {
         label.text = evt.Message;
         gameObject.SetActive(true);
@@ -28,7 +28,7 @@ public class GameOverHandler : MonoBehaviour
 
     private void OnDestroy()
     {
-        eventBus.UnsubscribeEvent<PlayerEvent.GameOver>(OnGameOverEvent);
+        eventBus.UnsubscribeEvent<GameEvent.GameOver>(OnGameOverEvent);
     }
 
     public void RestartLevel()
