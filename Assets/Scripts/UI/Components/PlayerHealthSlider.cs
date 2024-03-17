@@ -1,4 +1,3 @@
-using Void.Player;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,18 +9,18 @@ namespace Void.UI.Components
     
         protected override void Bind()
         {
-            EventBus.SubscribeEvent<PlayerEvent.UpdateHealth>(OnUpdateHealthEvent);
+            EventBus.SubscribeEvent<UIEvent.UpdateHealth>(OnUpdateHealthEvent);
             slider.value = 1;
         }
 
-        private void OnUpdateHealthEvent(PlayerEvent.UpdateHealth evt)
+        private void OnUpdateHealthEvent(UIEvent.UpdateHealth evt)
         {
-            slider.value = (float) evt.Health / evt.MaxHealth;
+            slider.value = evt.Factor;
         }
 
         private void OnDestroy()
         {
-            EventBus.UnsubscribeEvent<PlayerEvent.UpdateHealth>(OnUpdateHealthEvent);
+            EventBus.UnsubscribeEvent<UIEvent.UpdateHealth>(OnUpdateHealthEvent);
         }
     }
 }

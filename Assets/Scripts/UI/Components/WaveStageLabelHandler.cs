@@ -1,5 +1,4 @@
-﻿using Void.Player;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Void.UI.Components
@@ -10,17 +9,17 @@ namespace Void.UI.Components
     
         protected override void Bind()
         {
-            EventBus.SubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+            EventBus.SubscribeEvent<UIEvent.UpdateWave>(OnUpdateWaveEvent);
         }
 
-        private void OnUpdateWaveEvent(GameEvent.UpdateWave evt)
+        private void OnUpdateWaveEvent(UIEvent.UpdateWave evt)
         {
             label.text = $"Wave {evt.Wave}";
         }
 
         private void OnDestroy()
         {
-            EventBus.UnsubscribeEvent<GameEvent.UpdateWave>(OnUpdateWaveEvent);
+            EventBus.UnsubscribeEvent<UIEvent.UpdateWave>(OnUpdateWaveEvent);
         }
     }
 }

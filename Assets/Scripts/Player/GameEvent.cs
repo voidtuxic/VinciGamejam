@@ -6,16 +6,25 @@ namespace Void.Player
     {
         public class StartGame : IEvent {}
 
+        public class StartWave : IEvent
+        {
+            public int Wave { get; }
+            public StartWave(int wave)
+            {
+                Wave = wave;
+            }
+        }
+        
+        public class EndWave : IEvent {}
+
         public class GameOver : IEvent
         {
-            public string Message { get; set; }
+            public string Message { get; }
+            
+            public GameOver(string message)
+            {
+                Message = message;
+            }
         }
-    
-        public class UpdateWave : IEvent
-        {
-            public int Wave { get; set; }
-            public int TimeLeft { get; set; }
-        }
-        public class HideWave : IEvent { }
     }
 }
